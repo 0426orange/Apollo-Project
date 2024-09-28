@@ -1,10 +1,10 @@
 /*************************************************************
  * 1. Name:
- *      Alexis Rudy & Tzu Hsu
+ *      Alexis Rudy & Tzu Hsuam Hsu
  * 2. Assignment Name:
- *      Practice 02: Physics simulator
+ *      Lab 02: Apollo 11
  * 3. Assignment Description:
- *      Compute how the Apollo lander will move across the screen
+ *      Simulate the Apollo 11 landing
  * 4. What was the hardest part? Be as specific as possible.
  *      The hardest part was figuring out which functions called each other
  *      to get the correct computations for the lander.
