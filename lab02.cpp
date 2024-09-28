@@ -190,43 +190,73 @@ double prompt(string message)
 int main()
 {
     // Prompt for input and variables to be computed
-    double dx =       prompt("What is your horizontal velocity (m/s)? ");
     double dy =       prompt("What is your vertical velocity (m/s)? ");
+    double dx =       prompt("What is your horizontal velocity (m/s)? ");
     double y =        prompt("What is your altitude (m)? ");
-    double x =        prompt("What is your position (m)? ");
+    double x = 0.0; // Assuming horizontal position starts from 0
     double aDegrees = prompt("What is the angle of the LM where 0 is up (degrees)? ");
-    double t =        prompt("What is the time interval (s)? ");
+    double t = 1.0;  // Time interval in seconds (fixed at 1 second per iteration)
     
     double radians = degreesToRadians(aDegrees);
-    double accelerationThrust = computeAcceleration(THRUST, WEIGHT);                          // Acceleration due to thrust
-    double ddxThrust = computeHorizontalComponent(radians, accelerationThrust);           // Horizontal acceleration due to thrust
-    double ddyThrust = computeVerticalComponent(radians, accelerationThrust);                              // Vertical acceleration due to thrust
-    double ddx = ddxThrust;                                    // Total horizontal acceleration
-    double ddy = ddyThrust + GRAVITY;                          // Total vertical acceleration
-    double v = 0.0;                                                                           // Total velocity
+    double accelerationThrust = computeAcceleration(THRUST, WEIGHT);    // Acceleration due to thrust
+    double ddxThrust = computeHorizontalComponent(radians, accelerationThrust);  // Horizontal acceleration due to thrust
+    double ddyThrust = computeVerticalComponent(radians, accelerationThrust);    // Vertical acceleration due to thrust
+    double ddx = ddxThrust;     // Total horizontal acceleration
+    double ddy = ddyThrust + GRAVITY;  // Total vertical acceleration
+    double v = 0.0;             // Total velocity
 
-    
-
-    // Go through the simulator five times
-      // your code goes here
-      // Hint: Update the position _before_ updating the velocity
+    // Simulate the first 5 seconds of flight
     for (int i = 0; i < 5; i++)
     {
         // Update position
         x = computeDistance(x, dx, ddx, t);
         y = computeDistance(y, dy, ddy, t);
 
+        // Update velocity
         dx = computeVelocity(dx, ddx, t);
         dy = computeVelocity(dy, ddy, t);
         v = computeTotalComponent(dx, dy);
-        
-      // Output
-      cout.setf(ios::fixed | ios::showpoint);
-      cout.precision(2);
-      cout << "\tNew position:   (" <<  x << ", " <<  y << ")m\n";
-      cout << "\tNew velocity:   (" << dx << ", " << dy << ")m/s\n";
-      cout << "\tTotal velocity:  " << v << "m/s\n\n";
 
+        // Output the results for each second
+        cout.setf(ios::fixed | ios::showpoint);
+        cout.precision(2);
+        cout << (i + 1) << "s - x,y:(" << x << ", " << y << ")m  dx,dy:(" 
+             << dx << ", " << dy << ")m/s  speed:" << v << "m/s  angle:" << aDegrees << "deg\n";
     }
-   return 0;
+
+    // After 5 seconds, prompt for new angle
+    aDegrees = prompt("What is the new angle of the LM where 0 is up (degrees)? ");
+    radians = degreesToRadians(aDegrees);
+    ddxThrust = computeHorizontalComponent(radians, accelerationThrust);
+    ddyThrust = computeVerticalComponent(radians, accelerationThrust);
+    ddx = ddxThrust;
+    ddy = ddyThrust + GRAVITY;
+
+    // Simulate the next 5 seconds with the new angle
+    for (int i = 5; i < 10; i++)
+    {
+        // Update position
+        x = computeDistance(x, dx, ddx, t);
+        y = computeDistance(y, dy, ddy, t);
+
+        // Update velocity
+        dx = computeVelocity(dx, ddx, t);
+        dy = computeVelocity(dy, ddy, t);
+        v = computeTotalComponent(dx, dy);
+
+        // Output the results for each second
+        cout.setf(ios::fixed | ios::showpoint);
+        cout.precision(2);
+        cout << (i + 1) << "s - x,y:(" << x << ", " << y << ")m  dx,dy:(" 
+             << dx << ", " << dy << ")m/s  speed:" << v << "m/s  angle:" << aDegrees << "deg\n";
+
+        // Stop simulation if the lander touches the lunar surface
+        if (y <= 0)
+        {
+            cout << "The lander has touched down.\n";
+            break;
+        }
+    }
+
+    return 0;
 }
