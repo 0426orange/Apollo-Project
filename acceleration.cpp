@@ -1,50 +1,33 @@
+/***********************************************************************
+ * Source File:
+ *    ACCELERATION 
+ * Author:
+ *    Br. Helfrich
+ * Summary:
+ *    Everything we need to know about changing speed
+ ************************************************************************/
+
 #include "acceleration.h"
-#include <cmath> // Needed for cos() and sin()
+#include "angle.h"
 
-// Default constructor
-Acceleration::Acceleration() : ddx(0), ddy(0) {}
+#include <cmath>
 
-// Parameterized constructor
-Acceleration::Acceleration(double ddx, double ddy) : ddx(ddx), ddy(ddy) {}
-
-// Get ddx
-double Acceleration::getDDX() const {
-    return ddx;
-}
-
-// Get ddy
-double Acceleration::getDDY() const {
-    return ddy;
-}
-
-// Set ddx
-void Acceleration::setDDX(double ddx) {
-    this->ddx = ddx;
-}
-
-// Set ddy
-void Acceleration::setDDY(double ddy) {
-    this->ddy = ddy;
-}
-
-// Set acceleration based on angle and magnitude
-void Acceleration::set(const Angle& angle, double magnitude) {
-    this->ddx = magnitude * cos(angle.getRadians());
-    this->ddy = magnitude * sin(angle.getRadians());
-}
-
-// Add to ddx
-void Acceleration::addDDX(double ddx) {
-    this->ddx += ddx;
-}
-
-// Add to ddy
-void Acceleration::addDDY(double ddy) {
-    this->ddy += ddy;
-}
-
-// Add another Acceleration
-void Acceleration::add(const Acceleration& rhs) {
+/*********************************************
+ * ACCELERATION : ADD
+ *  a += a
+ *********************************************/
+void Acceleration::add(const Acceleration& rhs)
+{
     this->ddx += rhs.ddx;
     this->ddy += rhs.ddy;
+}
+
+/*********************************************
+ * ACCELERATION : SET
+ *  set from angle and direction
+ *********************************************/
+void Acceleration::set(const Angle& angle, double magnitude)
+{
+    this->ddx = magnitude * sin(angle.getRadians());
+    this->ddy = magnitude * cos(angle.getRadians());
 }
