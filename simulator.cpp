@@ -43,33 +43,56 @@ void Simulator::display(Thrust &thrust)
 {
     ogstream gout;
     Acceleration accel;
+    Position pos;
     
+    // draw the stars
     for (int i = 0; i < MAX_STARS; i++)
     {
         stars[i].draw(gout);
     }
+    
     // draw the ground
+    
+    double altitude = ground.getElevation(lander.getPosition());
+  
+    // put text on screen
+    gout = Position(pos.getX() + pos.getX() * 1.5, pos.getY() + (pos.getY()  + 15* 5.0));
+    gout.precision(2);
+    gout << "Fuel: " << lander.getFuel() << "\n";
+    gout << "Altitude: " << altitude << "\n";
+    gout << "Speed: " << lander.getSpeed() << "\n";
+    if (lander.isDead())
+    {
+        gout << "Huston, we have a problem";
+    }
+    if (lander.isLanded())
+    {
+        gout << "Eagle has landed!";
+    }
+    
     ground.draw(gout);
     
     if (lander.isFlying())
     {
         accel = lander.input(thrust, GRAVITY);
         lander.coast(accel, 0.1);
+        
+        // lander hits the ground
         if (ground.hitGround(lander.getPosition(), lander.getWidth()))
         {
             lander.crash();
         }
-        else if (ground.onPlatform(lander.getPosition(), lander.getWidth()))
+        // lander is on the platform and speed is under the max
+        if (ground.onPlatform(lander.getPosition(), lander.getWidth()) && lander.getSpeed() <= lander.getMaxSpeed())
         {
             lander.land();
         }
         
     }
+    // draw lander on screen
     lander.draw(thrust, gout);
     
-    
 }
-
 
 /*************************************
  * CALLBACK
@@ -83,8 +106,6 @@ void callBack(const Interface* pUI, void* p)
     Thrust thrust;
     thrust.set(pUI);
     pSimulator->display(thrust);
-    
-    
 }
 
 /*********************************
@@ -108,7 +129,7 @@ int main(int argc, char** argv)
     
     
     // Initialize OpenGL
-    Position posUpperRight(400, 400);
+    Position posUpperRight(500, 500);
     Interface ui("Lunar Lander", posUpperRight);
     
     // Initialize the game class
