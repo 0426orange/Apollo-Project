@@ -10,10 +10,9 @@
 #include "angle.h"
 #include <math.h>  // for floor()
 #include <cassert>
+using namespace std;
 
 #define TWO_PI 6.28318530718
-
-using namespace std;
 
  /************************************
   * ANGLE : NORMALIZE

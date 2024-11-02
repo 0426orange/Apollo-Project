@@ -1,25 +1,52 @@
-#ifndef ACCELERATION_H
-#define ACCELERATION_H
+/***********************************************************************
+ * Header File:
+ *    ACCELERATION
+ * Author:
+ *    Br. Helfrich
+ * Summary:
+ *    Everything we need to know about acceleration
+ ************************************************************************/
 
-#include "angle.h"
 
-class Acceleration {
-private:
-    double ddx; // Change in x-velocity
-    double ddy; // Change in y-velocity
+#pragma once
+#define GRAVITY -1.63
 
+class TestAcceleration;
+class TestVelocity;
+class TestPosition;
+class TestLander;
+class Angle;
+
+
+/*********************************************
+ * Acceleration
+ * Let's get moving
+ *********************************************/
+class Acceleration
+{
+    friend TestPosition;
+    friend TestVelocity;
+    friend TestAcceleration;
+    friend TestLander;
+    
 public:
-    Acceleration(); // Default constructor
-    Acceleration(double ddx, double ddy); // Parameterized constructor
-
-    double getDDX() const; // Get ddx
-    double getDDY() const; // Get ddy
-    void setDDX(double ddx); // Set ddx
-    void setDDY(double ddy); // Set ddy
-    void set(const Angle& angle, double magnitude); // Set acceleration based on angle and magnitude
-    void addDDX(double ddx); // Add to ddx
-    void addDDY(double ddy); // Add to ddy
-    void add(const Acceleration& rhs); // Add another Acceleration
+    // constructors
+    Acceleration() : ddx(0.0), ddy(0.0){}// Default constructor
+    Acceleration(double ddx, double ddy) : ddx(ddx), ddy(ddy){} // Parameterized constructor
+    
+    // getters
+    double getDDX() const {return ddx;}; // Get ddx
+    double getDDY() const {return ddy;}; // Get ddy
+    
+    // setters
+    void setDDX(double ddx)           { this->ddx = ddx; }
+    void setDDY(double ddy)           { this->ddy = ddy; }
+    void set(const Angle & a, double magnitude);
+    void addDDX(double ddx)           { this->ddx += ddx; }
+    void addDDY(double ddy)           { this->ddy += ddy; }
+    void add(const Acceleration& rhs);
+    
+private:
+    double ddx;     // horizontal acceleration
+    double ddy;     // vertical acceleration
 };
-
-#endif
